@@ -1,26 +1,47 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import { Route, Switch, Redirect } from 'react-router-dom'
+import { CssBaseline, Container } from '@material-ui/core'
+// import { connect } from 'react-redux'
 
-function App() {
+import LogIn from './containers/loginForm/logIn'
+import SignUp from './containers/loginForm/signUp'
+import NavPanel from './containers/navPanel/navPanel'
+import './App.css'
+
+const App = props => {
+  console.log('App', props)
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <React.Fragment>
+      <CssBaseline />
+      <Container maxWidth="md">
+        <NavPanel />
+        <Switch>
+          <Route path="/login" component={LogIn} />
+          <Route path="/signup" component={SignUp} />
+          {/* <Route
+            path="/create"
+            render={() => <CreateOrder loggedIn={loggedIn} />}
+          /> */}
+          {/* <Route path="/view" component={ViewOrders} /> */}
+          <Redirect to={'/login'} />
+        </Switch>
+      </Container>
+    </React.Fragment>
+  )
 }
 
-export default App;
+// const mapStateToProps = store => {
+//   return {
+//     userInfo: store.userInfo,
+//   }
+// }
+
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     // setUser: user => dispatch(setUser(user)),
+//   }
+// }
+
+// export default connect(mapStateToProps, mapDispatchToProps)(App)
+
+export default App
