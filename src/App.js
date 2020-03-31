@@ -6,10 +6,10 @@ import { CssBaseline, Container } from '@material-ui/core'
 import LogIn from './containers/loginForm/logIn'
 import SignUp from './containers/loginForm/signUp'
 import NavPanel from './containers/navPanel/navPanel'
+import CreateOrder from './containers/createOrder/createOrder'
 import './App.css'
 
-const App = props => {
-  console.log('App', props)
+const App = () => {
   return (
     <React.Fragment>
       <CssBaseline />
@@ -18,6 +18,7 @@ const App = props => {
         <Switch>
           <Route path="/login" component={LogIn} />
           <Route path="/signup" component={SignUp} />
+          <Route path="/create" component={CreateOrder} />
           {/* <Route
             path="/create"
             render={() => <CreateOrder loggedIn={loggedIn} />}

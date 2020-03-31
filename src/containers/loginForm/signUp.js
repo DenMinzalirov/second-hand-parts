@@ -12,7 +12,11 @@ import {
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { makeStyles } from '@material-ui/core/styles'
 import { NavLink } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { createUser } from '../../store/actions/userAction'
+
 import Copyright from '../../common/copiright'
+import Spiner from '../../common/spiner'
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -38,16 +42,26 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const SignUp = () => {
+const SignUp = props => {
+  console.log('SignUp', props)
+  const {
+    createUser,
+    user: { isFetching, error },
+  } = props
   const classes = useStyles()
+  let name, phone, email, password
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
+        {isFetching ? (
+          <Spiner />
+        ) : (
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+        )}
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
@@ -56,13 +70,14 @@ const SignUp = () => {
             <Grid item xs={12} sm={6}>
               <TextField
                 autoComplete="fname"
-                name="firstName"
+                name="name"
                 variant="outlined"
                 required
                 fullWidth
-                id="firstName"
-                label="First Name"
+                id="name"
+                label="Name"
                 autoFocus
+                inputRef={el => (name = el)}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -70,14 +85,16 @@ const SignUp = () => {
                 variant="outlined"
                 required
                 fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="lname"
+                id="phone"
+                label="Phone"
+                name="phone"
+                autoComplete="phone"
+                inputRef={el => (phone = el)}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
+                error={!!error}
                 variant="outlined"
                 required
                 fullWidth
@@ -85,10 +102,13 @@ const SignUp = () => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                inputRef={el => (email = el)}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
+                error={!!error}
+                helperText={error}
                 variant="outlined"
                 required
                 fullWidth
@@ -97,15 +117,25 @@ const SignUp = () => {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                inputRef={el => (password = el)}
               />
             </Grid>
           </Grid>
           <Button
-            type="submit"
+            // type="submit"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={() => {
+              createUser({
+                email: email.value,
+                password: password.value,
+                displayName: name.value,
+                phone: phone.value,
+              })
+              console.log(name.value)
+            }}
           >
             Sign Up
           </Button>
@@ -125,4 +155,16 @@ const SignUp = () => {
   )
 }
 
-export default SignUp
+const mapStateToProps = store => {
+  return {
+    user: store.userInfo,
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    createUser: user => dispatch(createUser(user)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignUp)

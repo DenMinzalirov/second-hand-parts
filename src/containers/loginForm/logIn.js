@@ -17,8 +17,8 @@ import { NavLink } from 'react-router-dom'
 
 import Spiner from '../../common/spiner'
 import Copyright from '../../common/copiright'
-import firebase from '../../firebase/firebase'
-import { setUser } from '../../store/actions/userAction'
+// import firebase from '../../firebase/firebase'
+import { setUser, logOutUser } from '../../store/actions/userAction'
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -45,12 +45,13 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const LogIn = props => {
-  console.log('LogIn', props)
+  // console.log('LogIn', props)
 
   const classes = useStyles()
   let email, password
   const {
     setUser,
+    logOutUser,
     user: { isFetching, error },
   } = props
   return (
@@ -64,7 +65,6 @@ const LogIn = props => {
             <LockOutlinedIcon />
           </Avatar>
         )}
-
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
@@ -136,11 +136,23 @@ const LogIn = props => {
         color="primary"
         className={classes.submit}
         onClick={() => {
-          firebase.auth().signOut()
+          console.log('logOutUser')
+          logOutUser()
         }}
       >
         logout
       </Button>
+      {/* <Button
+        fullWidth
+        variant="contained"
+        color="primary"
+        className={classes.submit}
+        onClick={() => {
+          // firebase.database().ref('users').child('MOHAX@test').set({ OwnerId: 1 })
+        }}
+      >
+        firebase
+      </Button> */}
     </Container>
   )
 }
@@ -154,7 +166,11 @@ const mapStateToProps = store => {
 const mapDispatchToProps = dispatch => {
   return {
     setUser: user => dispatch(setUser(user)),
+    logOutUser: () => dispatch(logOutUser()),
   }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LogIn)
+
+// чтение firebase.database().ref('users').once('value').then(v => {console.log('fire', v.val())})
+// запись без генерации id  firebase.database().ref('users').child('MOHAX@test').set({ OwnerId: 1 })

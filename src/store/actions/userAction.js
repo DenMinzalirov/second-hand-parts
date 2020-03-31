@@ -6,6 +6,50 @@ export const SET_USER_UNSUCCESS = 'SET_USER_UNSUCCESS'
 export const CHECK_USER_REQUEST = 'CHECK_USER_REQUEST'
 export const CHECK_USER_SUCCESS = 'CHECK_USER_SUCCESS'
 export const CHECK_USER_UNSUCCESS = 'CHECK_USER_UNSUCCESS'
+export const CREATE_USER_REQUEST = 'CREATE_USER_REQUEST'
+export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS'
+export const CREATE_USER_UNSUCCESS = 'CREATE_USER_UNSUCCESS'
+export const LOG_OUT_USER = 'LOG_OUT_USER'
+
+export const createUser = ({ email, password, displayName, phone }) => {
+  return dispatch => {
+    dispatch({
+      type: CREATE_USER_REQUEST,
+    })
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(user => {
+        user.user
+          .updateProfile({
+            displayName,
+          })
+          .then(() => {
+            firebase
+              .database()
+              .ref('users')
+              .child(user.user.uid)
+              .set({
+                email,
+                password,
+                displayName,
+                phone,
+                ownerID: user.user.uid,
+              })
+          })
+        dispatch({
+          type: CREATE_USER_SUCCESS,
+          payload: user,
+        })
+      })
+      .catch(e => {
+        dispatch({
+          type: CREATE_USER_UNSUCCESS,
+          payload: e.message,
+        })
+      })
+  }
+}
 
 export const setUser = ({ user, password }) => {
   return dispatch => {
@@ -15,11 +59,11 @@ export const setUser = ({ user, password }) => {
     firebase
       .auth()
       .signInWithEmailAndPassword(user, password)
-      .then(resp => {
-        console.log('signInWithEmailAndPassword', resp)
+      .then(status => {
+        // console.log('signInWithEmailAndPassword', resp)
         dispatch({
           type: SET_USER_SUCCESS,
-          payload: user,
+          payload: status.user,
         })
       })
       .catch(e => {
@@ -27,7 +71,6 @@ export const setUser = ({ user, password }) => {
           type: SET_USER_UNSUCCESS,
           payload: e.message,
         })
-        console.log('err', e)
       })
   }
 }
@@ -38,7 +81,7 @@ export const checkAuthStateChanged = () => {
       type: CHECK_USER_REQUEST,
     })
     firebase.auth().onAuthStateChanged(status => {
-      console.log('loggedIn', status)
+      // console.log('loggedIn', status)
       if (status) {
         dispatch({
           type: CHECK_USER_SUCCESS,
@@ -52,4 +95,11 @@ export const checkAuthStateChanged = () => {
       }
     })
   }
+}
+
+export const logOutUser = () => {
+  return dispatch =>
+    dispatch({
+      type: LOG_OUT_USER,
+    })
 }
