@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import {
   Avatar,
@@ -17,7 +17,6 @@ import { NavLink } from 'react-router-dom'
 
 import Spiner from '../../common/spiner'
 import Copyright from '../../common/copiright'
-// import firebase from '../../firebase/firebase'
 import { setUser, logOutUser } from '../../store/actions/userAction'
 
 const useStyles = makeStyles(theme => ({
@@ -52,8 +51,16 @@ const LogIn = props => {
   const {
     setUser,
     logOutUser,
-    user: { isFetching, error },
+    user: { isFetching, error, isLoggedIn },
+    history,
   } = props
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      history.push('/create')
+    }
+  })
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -142,17 +149,18 @@ const LogIn = props => {
       >
         logout
       </Button>
-      {/* <Button
+      <Button
         fullWidth
         variant="contained"
         color="primary"
         className={classes.submit}
         onClick={() => {
+          history.push('/create')
           // firebase.database().ref('users').child('MOHAX@test').set({ OwnerId: 1 })
         }}
       >
-        firebase
-      </Button> */}
+        nav
+      </Button>
     </Container>
   )
 }

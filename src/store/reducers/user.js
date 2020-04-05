@@ -12,7 +12,7 @@ import {
 } from '../actions/userAction'
 
 const initialState = {
-  user: '',
+  displayName: '',
   // password: '',
   isFetching: false,
   isLoggedIn: false,
@@ -44,9 +44,11 @@ export function userReducer(state = initialState, action) {
     case CHECK_USER_SUCCESS:
       return {
         ...state,
-        user: action.payload.displayName,
-        status: action.payload,
-        ownerId: action.payload.uid,
+        ...action.payload,
+        password: '',
+        // user: action.payload.displayName,
+        // status: action.payload,
+        // ownerId: action.payload.uid,
         isFetching: false,
         isLoggedIn: true,
       }
@@ -55,8 +57,11 @@ export function userReducer(state = initialState, action) {
         ...state,
         isFetching: false,
         isLoggedIn: false,
-        status: '',
-        user: '',
+        displayName: '',
+        phone: '',
+        ownerID: '',
+        password: '',
+        email: '',
       }
     case CREATE_USER_REQUEST:
       return { ...state, isFetching: true }
@@ -64,7 +69,8 @@ export function userReducer(state = initialState, action) {
       return {
         ...state,
         user: action.payload.displayName,
-        status: action.payload,
+        phone: action.payload.phone,
+        status: action.payload.user,
         isFetching: false,
         isLoggedIn: true,
       }

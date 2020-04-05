@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Avatar,
   Button,
@@ -46,10 +46,16 @@ const SignUp = props => {
   console.log('SignUp', props)
   const {
     createUser,
-    user: { isFetching, error },
+    history,
+    user: { isFetching, error, isLoggedIn },
   } = props
   const classes = useStyles()
   let name, phone, email, password
+  useEffect(() => {
+    if (isLoggedIn) {
+      history.push('/create')
+    }
+  })
 
   return (
     <Container component="main" maxWidth="xs">

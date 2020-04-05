@@ -5,6 +5,7 @@ import { AppBar, Toolbar, Button } from '@material-ui/core'
 import { connect } from 'react-redux'
 
 import { checkAuthStateChanged } from '../../store/actions/userAction'
+import { getAllUsers } from '../../store/actions/dataBaseAction'
 // import { userLoaded } from "../actions/index";
 // import Fab from '@material-ui/core/Fab';
 // import AddIcon from '@material-ui/icons/Add';
@@ -30,14 +31,18 @@ const useStyles = makeStyles(theme => ({
 
 const NavPanel = props => {
   const classes = useStyles()
-  // console.log('NavPanel', props)
+  console.log('NavPanel', props)
   const {
-    userInfo: { isLoggedIn },
+    userInfo: { isLoggedIn, displayName },
     checkAuthStateChanged,
+    getAllUsers,
   } = props
 
   useEffect(() => {
-    checkAuthStateChanged()
+    if (!isLoggedIn) {
+      checkAuthStateChanged()
+      getAllUsers()
+    }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   //   TODO: checkAuthStateChanged->useEffect or componentDidMount
@@ -56,9 +61,9 @@ const NavPanel = props => {
               Список запчастей
             </Button>
           </NavLink>
-          <NavLink className={classes.aLink} to="/login">
+          <NavLink className={classes.aLink} to="/userAccount">
             <Button variant="outlined" color="inherit">
-              LogOut
+              User Account {displayName}
             </Button>
           </NavLink>
         </Toolbar>
@@ -70,12 +75,14 @@ const NavPanel = props => {
 const mapStateToProps = store => {
   return {
     userInfo: store.userInfo,
+    // allUsers: store.
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     checkAuthStateChanged: () => dispatch(checkAuthStateChanged()),
+    getAllUsers: () => dispatch(getAllUsers()),
   }
 }
 

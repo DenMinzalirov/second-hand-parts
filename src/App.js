@@ -3,10 +3,12 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 import { CssBaseline, Container } from '@material-ui/core'
 // import { connect } from 'react-redux'
 
+import CreateOrder from './containers/createOrder/createOrder'
 import LogIn from './containers/loginForm/logIn'
 import SignUp from './containers/loginForm/signUp'
 import NavPanel from './containers/navPanel/navPanel'
-import CreateOrder from './containers/createOrder/createOrder'
+import ViewOrders from './containers/viewOrders/viewOrders'
+import UserAccount from './containers/userAccount/userAccount'
 import './App.css'
 
 const App = () => {
@@ -19,11 +21,12 @@ const App = () => {
           <Route path="/login" component={LogIn} />
           <Route path="/signup" component={SignUp} />
           <Route path="/create" component={CreateOrder} />
+          <Route path="/userAccount" component={UserAccount} />
           {/* <Route
             path="/create"
             render={() => <CreateOrder loggedIn={loggedIn} />}
           /> */}
-          {/* <Route path="/view" component={ViewOrders} /> */}
+          <Route path="/view" component={ViewOrders} />
           <Redirect to={'/login'} />
         </Switch>
       </Container>

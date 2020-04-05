@@ -39,7 +39,7 @@ export const createUser = ({ email, password, displayName, phone }) => {
           })
         dispatch({
           type: CREATE_USER_SUCCESS,
-          payload: user,
+          payload: { user, phone, displayName },
         })
       })
       .catch(e => {
@@ -83,10 +83,17 @@ export const checkAuthStateChanged = () => {
     firebase.auth().onAuthStateChanged(status => {
       // console.log('loggedIn', status)
       if (status) {
-        dispatch({
-          type: CHECK_USER_SUCCESS,
-          payload: status,
-        })
+        firebase
+          .database()
+          .ref('users')
+          .child(status.uid)
+          .once('value')
+          .then(snapshot => {
+            dispatch({
+              type: CHECK_USER_SUCCESS,
+              payload: snapshot.val(),
+            })
+          })
       } else {
         dispatch({
           type: CHECK_USER_UNSUCCESS,
@@ -98,8 +105,10 @@ export const checkAuthStateChanged = () => {
 }
 
 export const logOutUser = () => {
-  return dispatch =>
+  return dispatch => {
     dispatch({
       type: LOG_OUT_USER,
     })
+    firebase.auth().signOut()
+  }
 }
