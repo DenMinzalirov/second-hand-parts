@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
 
 import firebase from '../../firebase/firebase'
+import { getBase } from '../../store/actions/dataBaseAction'
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -34,7 +35,7 @@ const initStateOrder = {
 const CreateOrder = props => {
   console.log('CreateOrder', props)
 
-  const { ownerId, isLoggedIn, history } = props
+  const { ownerId, isLoggedIn, history, getBase } = props
   useEffect(() => {
     if (!isLoggedIn) {
       history.push('/login')
@@ -104,6 +105,7 @@ const CreateOrder = props => {
         disabled={!isValid}
         onClick={() => {
           setOrderInFirebase(state)
+          getBase()
         }}
         variant="outlined"
         className={buttonOrder}
@@ -117,9 +119,15 @@ const CreateOrder = props => {
 
 const mapStateToProps = store => {
   return {
-    ownerId: store.userInfo.ownerId,
+    ownerId: store.userInfo.ownerID,
     isLoggedIn: store.userInfo.isLoggedIn,
   }
 }
 
-export default connect(mapStateToProps)(CreateOrder)
+const mapDispatchToProps = dispatch => {
+  return {
+    getBase: () => dispatch(getBase()),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateOrder)

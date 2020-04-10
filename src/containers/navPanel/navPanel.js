@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 
 const NavPanel = props => {
   const classes = useStyles()
-  console.log('NavPanel', props)
+  // console.log('NavPanel', props)
   const {
     userInfo: { isLoggedIn, displayName },
     checkAuthStateChanged,

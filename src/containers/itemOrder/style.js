@@ -15,4 +15,9 @@ export const styles = theme => ({
     borderRadius: '50rem',
     margin: '10px',
   },
+  buttonDel: {
+    display: 'flex',
+    flex: 'auto',
+    justifyContent: 'center',
+  },
 })

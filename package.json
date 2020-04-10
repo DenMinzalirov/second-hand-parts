@@ -2,6 +2,7 @@
   "name": "second-hand-parts",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://denminzalirov.github.io/SHdepl",
   "dependencies": {
     "@material-ui/core": "^4.9.7",
     "@material-ui/icons": "^4.9.1",
@@ -10,6 +11,7 @@
     "@testing-library/user-event": "^7.2.1",
     "bootstrap": "^4.4.1",
     "firebase": "^7.13.0",
+    "gh-pages": "^2.2.0",
     "mui-datatables": "^2.14.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -22,6 +24,8 @@
     "redux-thunk": "^2.3.0"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

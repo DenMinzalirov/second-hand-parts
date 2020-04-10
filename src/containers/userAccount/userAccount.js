@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
-import { FormControl, TextField, Button } from '@material-ui/core'
+import React, { useEffect, useState } from 'react'
+import { Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
 
 import { logOutUser } from '../../store/actions/userAction'
+import ViewOrders from '../viewOrders/viewOrders'
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -11,6 +12,7 @@ const useStyles = makeStyles(theme => ({
     flexWrap: 'wrap',
     margin: '10px',
     flexDirection: 'column',
+    alignItems: 'center',
   },
   // textField: {
   //   marginLeft: theme.spacing(1),
@@ -21,25 +23,28 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flex: 'auto',
     justifyContent: 'center',
+    margin: '10px',
   },
 }))
 
 const UserAccount = props => {
-  console.log('UserAccount', props)
+  // console.log('UserAccount', props)
   const { container, buttonOrder } = useStyles()
+  const [isShowMyOrders, setisShowMyOrders] = useState(false)
   const {
     logOutUser,
     history,
-    userInfo: { isLoggedIn },
+    userInfo: { isLoggedIn, user, ownerID },
   } = props
   useEffect(() => {
     if (!isLoggedIn) {
       history.push('/login')
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div className={container}>
-      <h1 className={buttonOrder}>USER</h1>
+      <h1 className={buttonOrder}>{user}</h1>
       <Button
         variant="outlined"
         className={buttonOrder}
@@ -51,6 +56,21 @@ const UserAccount = props => {
       >
         LogOut
       </Button>
+      {isShowMyOrders ?
+        <ViewOrders myOwnerId={ownerID} /> :
+        <Button
+          variant="outlined"
+          className={buttonOrder}
+          color="primary"
+          onClick={() => {
+            setisShowMyOrders(true)
+          }}
+        >
+          Показать собственные запчасти
+    </Button>
+
+      }
+
     </div>
   )
 }
