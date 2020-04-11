@@ -33,7 +33,7 @@ const initStateOrder = {
 }
 
 const CreateOrder = props => {
-  console.log('CreateOrder', props)
+  // console.log('CreateOrder', props)
 
   const { ownerId, isLoggedIn, history, getBase } = props
   useEffect(() => {

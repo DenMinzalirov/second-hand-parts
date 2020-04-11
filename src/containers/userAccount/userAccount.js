@@ -4,7 +4,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
 
 import { logOutUser } from '../../store/actions/userAction'
-import ViewOrders from '../viewOrders/viewOrders'
+import { getMyBase } from '../../store/actions/dataBaseAction'
+import { MyTable } from '../viewOrders/viewOrders'
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -28,19 +29,51 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const UserAccount = props => {
-  // console.log('UserAccount', props)
+  console.log('UserAccount', props)
   const { container, buttonOrder } = useStyles()
   const [isShowMyOrders, setisShowMyOrders] = useState(false)
+  const [isHandleChange, setIsHandleChange] = useState(false)
+
+  const setHandleChange = () => {
+    setIsHandleChange(true)
+  }
+
   const {
     logOutUser,
     history,
+    getMyBase,
+    myOrders,
     userInfo: { isLoggedIn, user, ownerID },
   } = props
+
   useEffect(() => {
     if (!isLoggedIn) {
       history.push('/login')
     }
+    getMyBase(ownerID)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const [arrOrders, setArrOrders] = useState(myOrders)
+
+  const handleChange = (e) => {
+    // filtredArr = arrOrders
+    console.log(e.target.value)
+    let filterArr
+    // if (myOwnerId) {
+    // filterArr = myOrders.filter((el) => {
+    //   const fullString = (el[Object.keys(el)].brend + el[Object.keys(el)].model + el[Object.keys(el)].part + el[Object.keys(el)].description).toLowerCase().split(' ').join('')
+    //   return fullString.includes(e.target.value.toLowerCase().split(' ').join(''))
+    // })
+    // } else {
+
+    filterArr = myOrders.filter((el) => {
+      const fullString = (el[Object.keys(el)].brend + el[Object.keys(el)].model + el[Object.keys(el)].part + el[Object.keys(el)].description).toLowerCase().split(' ').join('')
+      return fullString.includes(e.target.value.toLowerCase().split(' ').join(''))
+    })
+    // }
+    setArrOrders(filterArr)
+  }
+  let filtredArr = isHandleChange ? arrOrders : myOrders
 
   return (
     <div className={container}>
@@ -57,7 +90,13 @@ const UserAccount = props => {
         LogOut
       </Button>
       {isShowMyOrders ?
-        <ViewOrders myOwnerId={ownerID} /> :
+        <MyTable
+          filtredArr={filtredArr}
+          setHandleChange={setHandleChange}
+          handleChange={handleChange}
+        />
+        // <ViewOrders myOwnerId={ownerID} /> 
+        :
         <Button
           variant="outlined"
           className={buttonOrder}
@@ -78,11 +117,13 @@ const UserAccount = props => {
 const mapStateToProps = store => {
   return {
     userInfo: store.userInfo,
+    myOrders: store.dataBase.myOrders
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
+    getMyBase: (ownerID) => dispatch(getMyBase(ownerID)),
     logOutUser: () => dispatch(logOutUser()),
   }
 }

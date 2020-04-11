@@ -6,12 +6,22 @@ import {
   GET_USER_OWNER_SUCCESS,
   GET_ALL_USERS_REQUEST,
   GET_ALL_USERS_SUCCESS,
+  GET_MY_BASE_REQUEST,
+  GET_MY_BASE_SUCCESS,
 } from '../actions/dataBaseAction'
 
 const initialState = {}
 
 export function dataBaseReducer(state = initialState, action) {
   switch (action.type) {
+    case GET_MY_BASE_REQUEST:
+      return { ...state, isFetching: true }
+    case GET_MY_BASE_SUCCESS:
+      return {
+        ...state,
+        myOrders: action.payload,
+        isFetching: false,
+      }
     case GET_BASE_REQUEST:
       return { ...state, isFetching: true }
     case GET_BASE_SUCCESS:

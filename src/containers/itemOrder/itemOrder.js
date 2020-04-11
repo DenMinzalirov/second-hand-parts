@@ -4,28 +4,26 @@ import { Modal, Backdrop, Fade, Button } from '@material-ui/core'
 import { connect } from 'react-redux'
 
 import { styles } from './style'
-import firebase from '../../firebase/firebase'
-import { getBase } from '../../store/actions/dataBaseAction'
+import { getBase, delItem } from '../../store/actions/dataBaseAction'
 
 const useStyles = makeStyles(styles)
 
 const ItemOrder = props => {
-  console.log('ItemOrder', props)
+  // console.log('ItemOrder', props)
   const itemId = Object.keys(props.itemOrder).join('') || ''
   const itemKey = props.itemOrder[Object.keys(props.itemOrder)] || {}
   const classes = useStyles()
   const {
     getBase,
+    delItem,
     state: {
       dataBase: { allUsers = {} },
       userInfo: { ownerID }
     },
   } = props
-  // console.log('allUsers', allUsers)
+
   const owner = allUsers[itemKey.ownerId] || ''
   const isOwner = itemKey.ownerId === ownerID
-
-  // console.log('setOwnerName', allUsers[itemId] || '')
 
   return (
     <div>
@@ -56,9 +54,6 @@ const ItemOrder = props => {
               </div>
               <div
                 className={classes.itemString}
-                onClick={() => {
-                  console.log('setOwnerName', allUsers[itemKey.ownerId].phone)
-                }}
               >
                 Телефон хозяина :{owner.phone}
               </div>
@@ -68,16 +63,16 @@ const ItemOrder = props => {
                   className={classes.buttonDel}
                   color="primary"
                   onClick={() => {
-                    console.log(itemId)
-                    getBase()
                     props.clearItemOrder()
-                    firebase.database().ref('orders/' + itemId).remove()
+                    // props.delItemOrder()
+                    delItem(itemId)
+                    getBase()
+                    // firebase.database().ref('orders/' + itemId).remove()
                   }}
                 >
                   Удалить запчасть(вы хозяин)
               </Button> : null
               }
-
             </div>
           </div>
         </Fade>
@@ -95,6 +90,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     getBase: () => dispatch(getBase()),
+    delItem: (id) => dispatch(delItem(id))
   }
 }
 

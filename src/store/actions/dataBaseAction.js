@@ -9,6 +9,24 @@ export const GET_USER_OWNER_UNSUCCESS = 'GET_USER_OWNER_UNSUCCESS'
 export const GET_ALL_USERS_REQUEST = 'GET_USERS_REQUEST'
 export const GET_ALL_USERS_SUCCESS = 'GET_USERS_SUCCESS'
 export const GET_ALL_USERS_UNSUCCESS = 'GET_USERS_UNSUCCESS'
+export const DEL_ITEM = 'DEL_ITEM'
+export const GET_MY_BASE_REQUEST = 'GET_MY_BASE_REQUEST'
+export const GET_MY_BASE_SUCCESS = 'GET_MY_BASE_SUCCESS'
+export const GET_MY_BASE_UNSUCCESS = 'GET_MY_BASE_UNSUCCESS'
+
+export const delItem = (itemId) => {
+  return dispatch => {
+    dispatch({
+      type: DEL_ITEM
+    })
+    firebase
+      .database()
+      .ref('orders/' + itemId)
+      .remove().then((e) => {
+        console.log('DEL_ITEM', e)
+      })
+  }
+}
 
 export const getAllUsers = () => {
   return dispatch => {
@@ -44,6 +62,35 @@ export const getUserOwner = ownerId => {
           payload: snapshot.val().phone,
         })
         console.log(snapshot.val().phone)
+      })
+  }
+}
+
+export const getMyBase = (ownerID) => {
+  return dispatch => {
+    dispatch({
+      type: GET_MY_BASE_REQUEST,
+    })
+    firebase
+      .database()
+      .ref('orders')
+      .once('value')
+      .then(snapshot => {
+        dispatch({
+          type: GET_MY_BASE_SUCCESS,
+          payload: Object.entries(snapshot.val()).map(entry => ({
+            [entry[0]]: entry[1],
+          })).filter((item) => {
+            return item[Object.keys(item)[0]].ownerId === ownerID
+          }),
+        })
+      })
+      .catch(e => {
+        console.log('GET_MY_BASE_UNSUCCESS', e)
+        dispatch({
+          type: GET_MY_BASE_UNSUCCESS,
+          payload: e,
+        })
       })
   }
 }
