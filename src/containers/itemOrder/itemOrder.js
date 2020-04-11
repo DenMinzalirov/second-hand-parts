@@ -4,7 +4,7 @@ import { Modal, Backdrop, Fade, Button } from '@material-ui/core'
 import { connect } from 'react-redux'
 
 import { styles } from './style'
-import { getBase, delItem } from '../../store/actions/dataBaseAction'
+import { getBase, delItem, getMyBase } from '../../store/actions/dataBaseAction'
 
 const useStyles = makeStyles(styles)
 
@@ -15,6 +15,7 @@ const ItemOrder = props => {
   const classes = useStyles()
   const {
     getBase,
+    getMyBase,
     delItem,
     state: {
       dataBase: { allUsers = {} },
@@ -67,6 +68,7 @@ const ItemOrder = props => {
                     // props.delItemOrder()
                     delItem(itemId)
                     getBase()
+                    getMyBase(ownerID)
                     // firebase.database().ref('orders/' + itemId).remove()
                   }}
                 >
@@ -90,7 +92,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     getBase: () => dispatch(getBase()),
-    delItem: (id) => dispatch(delItem(id))
+    delItem: (id) => dispatch(delItem(id)),
+    getMyBase: (id) => dispatch(getMyBase(id))
   }
 }
 
