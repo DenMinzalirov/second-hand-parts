@@ -18,3 +18,8 @@ code {
 .rowMyTable:hover {
   background-color: antiquewhite;
 }
+
+a:hover {
+  color: #FFEB3B;
+  text-decoration: underline;
+}

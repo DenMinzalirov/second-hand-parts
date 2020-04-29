@@ -68,10 +68,10 @@ const LogIn = props => {
         {isFetching ? (
           <Spiner />
         ) : (
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-        )}
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+          )}
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
@@ -137,7 +137,7 @@ const LogIn = props => {
         <Copyright />
       </Box>
       {/*TODO: тестовая кнопка удалить */}
-      <Button
+      {/* <Button
         fullWidth
         variant="contained"
         color="primary"
@@ -148,8 +148,8 @@ const LogIn = props => {
         }}
       >
         logout
-      </Button>
-      <Button
+      </Button> */}
+      {/* <Button
         fullWidth
         variant="contained"
         color="primary"
@@ -160,7 +160,7 @@ const LogIn = props => {
         }}
       >
         nav
-      </Button>
+      </Button> */}
     </Container>
   )
 }

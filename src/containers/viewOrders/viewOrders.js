@@ -10,7 +10,7 @@ const ViewOrders = props => {
   // console.log('ViewOrders', props)
 
   const {
-    myOwnerId = false,
+    // myOwnerId = false,
     getBase,
     history,
     isLoggedIn,
@@ -60,12 +60,12 @@ const ViewOrders = props => {
     let filterArr
     // if (myOwnerId) {
     // filterArr = myOrders.filter((el) => {
-    //   const fullString = (el[Object.keys(el)].brend + el[Object.keys(el)].model + el[Object.keys(el)].part + el[Object.keys(el)].description).toLowerCase().split(' ').join('')
+    //   const fullString = (el[Object.keys(el)].brand + el[Object.keys(el)].model + el[Object.keys(el)].part + el[Object.keys(el)].description).toLowerCase().split(' ').join('')
     //   return fullString.includes(e.target.value.toLowerCase().split(' ').join(''))
     // })
     // } else {
     filterArr = baseOrders.filter((el) => {
-      const fullString = (el[Object.keys(el)].brend + el[Object.keys(el)].model + el[Object.keys(el)].part + el[Object.keys(el)].description).toLowerCase().split(' ').join('')
+      const fullString = (el[Object.keys(el)].brand + el[Object.keys(el)].model + el[Object.keys(el)].part + el[Object.keys(el)].description).toLowerCase().split(' ').join('')
       return fullString.includes(e.target.value.toLowerCase().split(' ').join(''))
     })
     // }
@@ -111,7 +111,7 @@ const mapDispatchToProps = dispatch => {
 export default connect(mapStateToProps, mapDispatchToProps)(ViewOrders)
 
 export const MyTable = (props) => {
-  console.log('MyTable', props)
+  // console.log('MyTable', props)
   const { filtredArr, handleChange, setHandleChange } = props
   const [itemOrder, setItemOrder] = useState({})
 
@@ -134,7 +134,7 @@ export const MyTable = (props) => {
         <thead>
           <tr>
             <th className="id-parts">ID</th>
-            <th>Brend</th>
+            <th>brand</th>
             <th>Model</th>
             <th>Part</th>
             <th>Description</th>
@@ -156,7 +156,7 @@ export const MyTable = (props) => {
               }}
             >
               <td className="id-parts">{Object.keys(item)[0]}</td>
-              <td>{item[Object.keys(item)[0]].brend}</td>
+              <td>{item[Object.keys(item)[0]].brand}</td>
               <td>{item[Object.keys(item)[0]].model}</td>
               <td>{item[Object.keys(item)[0]].part}</td>
               <td>{item[Object.keys(item)[0]].description}</td>

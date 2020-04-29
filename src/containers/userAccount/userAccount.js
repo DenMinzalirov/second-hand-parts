@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
 
 import { logOutUser } from '../../store/actions/userAction'
-import { getMyBase } from '../../store/actions/dataBaseAction'
+import { getMyBase, clearBase } from '../../store/actions/dataBaseAction'
 import { MyTable } from '../viewOrders/viewOrders'
 
 const useStyles = makeStyles(theme => ({
@@ -39,18 +39,19 @@ const UserAccount = props => {
   }
 
   const {
+    clearBase,
     logOutUser,
     history,
     getMyBase,
     myOrders,
-    userInfo: { isLoggedIn, user, ownerID },
+    userInfo: { isLoggedIn, user, ownerId },
   } = props
 
   useEffect(() => {
     if (!isLoggedIn) {
       history.push('/login')
     }
-    getMyBase(ownerID)
+    getMyBase(ownerId)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const [arrOrders, setArrOrders] = useState(myOrders)
@@ -61,13 +62,13 @@ const UserAccount = props => {
     let filterArr
     // if (myOwnerId) {
     // filterArr = myOrders.filter((el) => {
-    //   const fullString = (el[Object.keys(el)].brend + el[Object.keys(el)].model + el[Object.keys(el)].part + el[Object.keys(el)].description).toLowerCase().split(' ').join('')
+    //   const fullString = (el[Object.keys(el)].brand + el[Object.keys(el)].model + el[Object.keys(el)].part + el[Object.keys(el)].description).toLowerCase().split(' ').join('')
     //   return fullString.includes(e.target.value.toLowerCase().split(' ').join(''))
     // })
     // } else {
 
     filterArr = myOrders.filter((el) => {
-      const fullString = (el[Object.keys(el)].brend + el[Object.keys(el)].model + el[Object.keys(el)].part + el[Object.keys(el)].description).toLowerCase().split(' ').join('')
+      const fullString = (el[Object.keys(el)].brand + el[Object.keys(el)].model + el[Object.keys(el)].part + el[Object.keys(el)].description).toLowerCase().split(' ').join('')
       return fullString.includes(e.target.value.toLowerCase().split(' ').join(''))
     })
     // }
@@ -84,6 +85,7 @@ const UserAccount = props => {
         color="primary"
         onClick={() => {
           logOutUser()
+          clearBase()
           history.push('/login')
         }}
       >
@@ -123,8 +125,9 @@ const mapStateToProps = store => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getMyBase: (ownerID) => dispatch(getMyBase(ownerID)),
+    getMyBase: (ownerId) => dispatch(getMyBase(ownerId)),
     logOutUser: () => dispatch(logOutUser()),
+    clearBase: () => dispatch(clearBase()),
   }
 }
 

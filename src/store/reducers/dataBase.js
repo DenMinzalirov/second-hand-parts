@@ -8,6 +8,7 @@ import {
   GET_ALL_USERS_SUCCESS,
   GET_MY_BASE_REQUEST,
   GET_MY_BASE_SUCCESS,
+  CLEAR_BASE,
 } from '../actions/dataBaseAction'
 
 const initialState = {}
@@ -38,7 +39,6 @@ export function dataBaseReducer(state = initialState, action) {
         allUsers: action.payload,
         isFetching: false,
       }
-
     case GET_USER_OWNER_REQUEST:
       return { ...state, isFetching: true }
     case GET_USER_OWNER_SUCCESS:
@@ -47,7 +47,8 @@ export function dataBaseReducer(state = initialState, action) {
         userOwnerPhone: action.payload,
         isFetching: false,
       }
-
+    case CLEAR_BASE:
+      return { ...initialState, isFetching: false }
     default:
       return state
   }

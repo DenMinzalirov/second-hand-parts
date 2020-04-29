@@ -34,12 +34,17 @@ export const createUser = ({ email, password, displayName, phone }) => {
                 password,
                 displayName,
                 phone,
-                ownerID: user.user.uid,
+                ownerId: user.user.uid,
               })
           })
         dispatch({
           type: CREATE_USER_SUCCESS,
-          payload: { user, phone, displayName },
+          payload: {
+            email,
+            displayName,
+            phone,
+            ownerId: user.user.uid,
+          },
         })
       })
       .catch(e => {
@@ -59,11 +64,11 @@ export const setUser = ({ user, password }) => {
     firebase
       .auth()
       .signInWithEmailAndPassword(user, password)
-      .then(status => {
+      .then(() => {
         // console.log('signInWithEmailAndPassword', resp)
         dispatch({
           type: SET_USER_SUCCESS,
-          payload: status.user,
+          // payload: status.user,
         })
       })
       .catch(e => {
@@ -89,6 +94,7 @@ export const checkAuthStateChanged = () => {
           .child(status.uid)
           .once('value')
           .then(snapshot => {
+            // console.log('checkAuthStateChanged', snapshot.val())
             dispatch({
               type: CHECK_USER_SUCCESS,
               payload: snapshot.val(),

@@ -26,9 +26,10 @@ export function userReducer(state = initialState, action) {
     case SET_USER_SUCCESS:
       return {
         ...state,
-        user: action.payload.displayName,
-        status: action.payload,
-        ownerId: action.payload.uid,
+        // ...action.payload,
+        // user: action.payload.displayName,
+        // status: action.payload,
+        // ownerId: action.payload.uid,
         isFetching: false,
         isLoggedIn: true,
       }
@@ -59,7 +60,7 @@ export function userReducer(state = initialState, action) {
         isLoggedIn: false,
         displayName: '',
         phone: '',
-        ownerID: '',
+        ownerId: '',
         password: '',
         email: '',
       }
@@ -68,9 +69,10 @@ export function userReducer(state = initialState, action) {
     case CREATE_USER_SUCCESS:
       return {
         ...state,
-        user: action.payload.displayName,
-        phone: action.payload.phone,
-        status: action.payload.user,
+        ...action.payload,
+        // user: action.payload.displayName,
+        // phone: action.payload.phone,
+        // status: action.payload.user,
         isFetching: false,
         isLoggedIn: true,
       }

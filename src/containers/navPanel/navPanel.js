@@ -5,7 +5,7 @@ import { AppBar, Toolbar, Button } from '@material-ui/core'
 import { connect } from 'react-redux'
 
 import { checkAuthStateChanged } from '../../store/actions/userAction'
-import { getAllUsers } from '../../store/actions/dataBaseAction'
+// import { getAllUsers } from '../../store/actions/dataBaseAction'
 // import { userLoaded } from "../actions/index";
 // import Fab from '@material-ui/core/Fab';
 // import AddIcon from '@material-ui/icons/Add';
@@ -35,14 +35,16 @@ const NavPanel = props => {
   const {
     userInfo: { isLoggedIn, displayName },
     checkAuthStateChanged,
-    getAllUsers,
+    // getAllUsers,
   } = props
 
   useEffect(() => {
     if (!isLoggedIn) {
       checkAuthStateChanged()
-      getAllUsers()
     }
+    // if (isLoggedIn) {
+    //   getAllUsers()
+    // }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   //   TODO: checkAuthStateChanged->useEffect or componentDidMount
@@ -82,7 +84,7 @@ const mapStateToProps = store => {
 const mapDispatchToProps = dispatch => {
   return {
     checkAuthStateChanged: () => dispatch(checkAuthStateChanged()),
-    getAllUsers: () => dispatch(getAllUsers()),
+    // getAllUsers: () => dispatch(getAllUsers()),
   }
 }
 

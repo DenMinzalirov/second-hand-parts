@@ -13,6 +13,7 @@ export const DEL_ITEM = 'DEL_ITEM'
 export const GET_MY_BASE_REQUEST = 'GET_MY_BASE_REQUEST'
 export const GET_MY_BASE_SUCCESS = 'GET_MY_BASE_SUCCESS'
 export const GET_MY_BASE_UNSUCCESS = 'GET_MY_BASE_UNSUCCESS'
+export const CLEAR_BASE = 'CLEAR_BASE'
 
 export const delItem = (itemId) => {
   return dispatch => {
@@ -28,45 +29,45 @@ export const delItem = (itemId) => {
   }
 }
 
-export const getAllUsers = () => {
-  return dispatch => {
-    dispatch({
-      type: GET_ALL_USERS_REQUEST,
-    })
-    firebase
-      .database()
-      .ref('users')
-      .once('value')
-      .then(snapshot => {
-        dispatch({
-          type: GET_ALL_USERS_SUCCESS,
-          payload: snapshot.val(),
-        })
-      })
-  }
-}
+// export const getAllUsers = () => {
+//   return dispatch => {
+//     dispatch({
+//       type: GET_ALL_USERS_REQUEST,
+//     })
+//     firebase
+//       .database()
+//       .ref('users')
+//       .once('value')
+//       .then(snapshot => {
+//         dispatch({
+//           type: GET_ALL_USERS_SUCCESS,
+//           payload: snapshot.val(),
+//         })
+//       })
+//   }
+// }
 
-export const getUserOwner = ownerId => {
-  return dispatch => {
-    dispatch({
-      type: GET_USER_OWNER_REQUEST,
-    })
-    firebase
-      .database()
-      .ref('users')
-      .child(ownerId)
-      .once('value')
-      .then(snapshot => {
-        dispatch({
-          type: GET_USER_OWNER_SUCCESS,
-          payload: snapshot.val().phone,
-        })
-        console.log(snapshot.val().phone)
-      })
-  }
-}
+// export const getUserOwner = ownerId => {
+//   return dispatch => {
+//     dispatch({
+//       type: GET_USER_OWNER_REQUEST,
+//     })
+//     firebase
+//       .database()
+//       .ref('users')
+//       .child(ownerId)
+//       .once('value')
+//       .then(snapshot => {
+//         dispatch({
+//           type: GET_USER_OWNER_SUCCESS,
+//           payload: snapshot.val().phone,
+//         })
+//         console.log(snapshot.val().phone)
+//       })
+//   }
+// }
 
-export const getMyBase = (ownerID) => {
+export const getMyBase = (ownerId) => {
   return dispatch => {
     dispatch({
       type: GET_MY_BASE_REQUEST,
@@ -81,7 +82,7 @@ export const getMyBase = (ownerID) => {
           payload: Object.entries(snapshot.val()).map(entry => ({
             [entry[0]]: entry[1],
           })).filter((item) => {
-            return item[Object.keys(item)[0]].ownerId === ownerID
+            return item[Object.keys(item)[0]].ownerId === ownerId
           }),
         })
       })
@@ -92,6 +93,14 @@ export const getMyBase = (ownerID) => {
           payload: e,
         })
       })
+  }
+}
+
+export const clearBase = () => {
+  return dispatch => {
+    dispatch({
+      type: CLEAR_BASE,
+    })
   }
 }
 

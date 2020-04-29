@@ -5,27 +5,12 @@ import { connect } from 'react-redux'
 
 import firebase from '../../firebase/firebase'
 import { getBase } from '../../store/actions/dataBaseAction'
+import { styles } from './style'
 
-const useStyles = makeStyles(theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    margin: '10px',
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    margin: '10px',
-  },
-  buttonOrder: {
-    display: 'flex',
-    flex: 'auto',
-    justifyContent: 'center',
-  },
-}))
+const useStyles = makeStyles(styles)
 
 const initStateOrder = {
-  brend: '',
+  brand: '',
   model: '',
   part: '',
   description: '',
@@ -33,9 +18,11 @@ const initStateOrder = {
 }
 
 const CreateOrder = props => {
-  // console.log('CreateOrder', props)
+  const createYear = (new Date()).getFullYear();
+  const date = (new Date()).toDateString()
+  console.log('CreateOrder', props)
 
-  const { ownerId, isLoggedIn, history, getBase } = props
+  const { ownerId, isLoggedIn, history, getBase, ownerPhone, ownerName } = props
   useEffect(() => {
     if (!isLoggedIn) {
       history.push('/login')
@@ -48,7 +35,7 @@ const CreateOrder = props => {
   const [isValid, setIsValid] = useState(false)
 
   const handleChange = ({ target: { name, value } }) => {
-    setState({ ...state, [name]: value, ownerId: ownerId })
+    setState({ ...state, [name]: value, ownerId: ownerId, ownerPhone, ownerName, createYear, date })
     setIsValid(true)
   }
   //TODO: firebase action?
@@ -56,9 +43,8 @@ const CreateOrder = props => {
     firebase
       .database()
       .ref('orders')
-      //   .child('test')
       .push(state)
-    console.log('setOrderInFirebase', state)
+    // console.log('setOrderInFirebase', state)
     setState(initStateOrder)
     setIsValid(false)
   }
@@ -66,11 +52,11 @@ const CreateOrder = props => {
     <FormControl className={container} noValidate autoComplete="off">
       <h1 className={buttonOrder}>Оформить позицию</h1>
       <TextField
-        name="brend"
+        name="brand"
         className={textField}
-        value={state.brend}
+        value={state.brand}
         onChange={handleChange}
-        label="Бренд:"
+        label="Бренд: наименование производителя например Samsung"
         fullWidth
         variant="outlined"
       />
@@ -79,7 +65,7 @@ const CreateOrder = props => {
         className={textField}
         value={state.model}
         onChange={handleChange}
-        label="Модель:"
+        label="Модель: наименование модели аппарата например A510"
         fullWidth
         variant="outlined"
       />
@@ -88,7 +74,7 @@ const CreateOrder = props => {
         className={textField}
         value={state.part}
         onChange={handleChange}
-        label="Parts:"
+        label="Parts: наименование запчасти(дисплй, плата) или пометка в сборе"
         fullWidth
         variant="outlined"
       />
@@ -97,7 +83,7 @@ const CreateOrder = props => {
         className={textField}
         value={state.description}
         onChange={handleChange}
-        label="Описание:"
+        label="Описание: цвет, работоспособность ..."
         fullWidth
         variant="outlined"
       />
@@ -117,10 +103,12 @@ const CreateOrder = props => {
   )
 }
 
-const mapStateToProps = store => {
+const mapStateToProps = ({ userInfo: { ownerId, isLoggedIn, phone, displayName } }) => {
   return {
-    ownerId: store.userInfo.ownerID,
-    isLoggedIn: store.userInfo.isLoggedIn,
+    ownerId,
+    isLoggedIn,
+    ownerPhone: phone,
+    ownerName: displayName,
   }
 }
 

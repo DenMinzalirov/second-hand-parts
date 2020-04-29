@@ -64,10 +64,10 @@ const SignUp = props => {
         {isFetching ? (
           <Spiner />
         ) : (
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-        )}
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+          )}
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
