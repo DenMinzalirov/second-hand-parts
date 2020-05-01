@@ -50,7 +50,6 @@ const LogIn = props => {
   let email, password
   const {
     setUser,
-    logOutUser,
     user: { isFetching, error, isLoggedIn },
     history,
   } = props

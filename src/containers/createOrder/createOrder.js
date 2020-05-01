@@ -9,7 +9,7 @@ import { styles } from './style'
 
 const useStyles = makeStyles(styles)
 
-const initStateOrder = {
+let initStateOrder = {
   brand: '',
   model: '',
   part: '',
@@ -20,31 +20,42 @@ const initStateOrder = {
 const CreateOrder = props => {
   const createYear = (new Date()).getFullYear();
   const date = (new Date()).toDateString()
-  console.log('CreateOrder', props)
+  // console.log('CreateOrder', props)
 
-  const { ownerId, isLoggedIn, history, getBase, ownerPhone, ownerName } = props
+  const { ownerId, isLoggedIn, history, getBase, ownerPhone, ownerName, item, itemId = '', clearItemOrder } = props
+
+  const [state, setState] = useState(initStateOrder)
+
   useEffect(() => {
     if (!isLoggedIn) {
       history.push('/login')
     }
-  })
+    if (item) {
+      setState(item)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const { container, textField, buttonOrder } = useStyles()
   // order
-  const [state, setState] = useState(initStateOrder)
+
   const [isValid, setIsValid] = useState(false)
 
   const handleChange = ({ target: { name, value } }) => {
-    setState({ ...state, [name]: value, ownerId: ownerId, ownerPhone, ownerName, createYear, date })
+    setState({ ...state, [name]: value, ownerId, ownerPhone, ownerName, createYear, date, clickEvent: '' })
     setIsValid(true)
   }
   //TODO: firebase action?
   const setOrderInFirebase = state => {
+    if (itemId) {
+      firebase
+        .database()
+        .ref('orders/' + itemId)
+        .remove()
+    }
     firebase
       .database()
       .ref('orders')
       .push(state)
-    // console.log('setOrderInFirebase', state)
     setState(initStateOrder)
     setIsValid(false)
   }
@@ -92,6 +103,10 @@ const CreateOrder = props => {
         onClick={() => {
           setOrderInFirebase(state)
           getBase()
+          if (itemId) {
+            clearItemOrder()
+          }
+          // getMyBase()
         }}
         variant="outlined"
         className={buttonOrder}
@@ -115,6 +130,7 @@ const mapStateToProps = ({ userInfo: { ownerId, isLoggedIn, phone, displayName }
 const mapDispatchToProps = dispatch => {
   return {
     getBase: () => dispatch(getBase()),
+    // getMyBase: () => dispatch(getMyBase()),
   }
 }
 

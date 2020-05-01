@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { connect } from 'react-redux'
 
 import { logOutUser } from '../../store/actions/userAction'
-import { getMyBase, clearBase } from '../../store/actions/dataBaseAction'
+import { clearBase, getBase } from '../../store/actions/dataBaseAction'
 import { MyTable } from '../viewOrders/viewOrders'
 
 const useStyles = makeStyles(theme => ({
@@ -15,11 +15,6 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  // textField: {
-  //   marginLeft: theme.spacing(1),
-  //   marginRight: theme.spacing(1),
-  //   margin: '10px',
-  // },
   buttonOrder: {
     display: 'flex',
     flex: 'auto',
@@ -29,21 +24,16 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const UserAccount = props => {
-  console.log('UserAccount', props)
+  // console.log('UserAccount', props)
   const { container, buttonOrder } = useStyles()
   const [isShowMyOrders, setisShowMyOrders] = useState(false)
-  const [isHandleChange, setIsHandleChange] = useState(false)
-
-  const setHandleChange = () => {
-    setIsHandleChange(true)
-  }
 
   const {
     clearBase,
     logOutUser,
     history,
-    getMyBase,
-    myOrders,
+    getBase,
+    baseOrders = [],
     userInfo: { isLoggedIn, user, ownerId },
   } = props
 
@@ -51,30 +41,10 @@ const UserAccount = props => {
     if (!isLoggedIn) {
       history.push('/login')
     }
-    getMyBase(ownerId)
+    getBase()
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const [arrOrders, setArrOrders] = useState(myOrders)
-
-  const handleChange = (e) => {
-    // filtredArr = arrOrders
-    console.log(e.target.value)
-    let filterArr
-    // if (myOwnerId) {
-    // filterArr = myOrders.filter((el) => {
-    //   const fullString = (el[Object.keys(el)].brand + el[Object.keys(el)].model + el[Object.keys(el)].part + el[Object.keys(el)].description).toLowerCase().split(' ').join('')
-    //   return fullString.includes(e.target.value.toLowerCase().split(' ').join(''))
-    // })
-    // } else {
-
-    filterArr = myOrders.filter((el) => {
-      const fullString = (el[Object.keys(el)].brand + el[Object.keys(el)].model + el[Object.keys(el)].part + el[Object.keys(el)].description).toLowerCase().split(' ').join('')
-      return fullString.includes(e.target.value.toLowerCase().split(' ').join(''))
-    })
-    // }
-    setArrOrders(filterArr)
-  }
-  let filtredArr = isHandleChange ? arrOrders : myOrders
+  const filtredArr = baseOrders.filter(el => { return el.ownerId === ownerId })
 
   return (
     <div className={container}>
@@ -94,10 +64,7 @@ const UserAccount = props => {
       {isShowMyOrders ?
         <MyTable
           filtredArr={filtredArr}
-          setHandleChange={setHandleChange}
-          handleChange={handleChange}
         />
-        // <ViewOrders myOwnerId={ownerID} /> 
         :
         <Button
           variant="outlined"
@@ -109,9 +76,7 @@ const UserAccount = props => {
         >
           Показать собственные запчасти
     </Button>
-
       }
-
     </div>
   )
 }
@@ -119,15 +84,16 @@ const UserAccount = props => {
 const mapStateToProps = store => {
   return {
     userInfo: store.userInfo,
-    myOrders: store.dataBase.myOrders
+    myOrders: store.dataBase.myOrders,
+    baseOrders: store.dataBase.baseOrders,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    getMyBase: (ownerId) => dispatch(getMyBase(ownerId)),
     logOutUser: () => dispatch(logOutUser()),
     clearBase: () => dispatch(clearBase()),
+    getBase: () => dispatch(getBase()),
   }
 }
 

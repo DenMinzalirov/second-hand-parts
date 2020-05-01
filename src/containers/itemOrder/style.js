@@ -20,4 +20,9 @@ export const styles = theme => ({
     flex: 'auto',
     justifyContent: 'center',
   },
+  editer: {
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column',
+  }
 })

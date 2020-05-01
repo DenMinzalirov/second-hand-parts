@@ -5,10 +5,12 @@ export const styles = theme => ({
         margin: '10px',
     },
     textField: {
-        marginLeft: theme.spacing(1),
-        marginRight: theme.spacing(1),
-        margin: '10px',
-        overflow: 'hidden',
+        // marginLeft: theme.spacing(1),
+        // marginRight: theme.spacing(1),
+        // margin: '10px',
+        // overflow: 'hidden',
+        marginTop: theme.spacing(1),
+        marginBottom: theme.spacing(1),
     },
     buttonOrder: {
         display: 'flex',

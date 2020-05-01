@@ -1,32 +1,28 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Modal, Backdrop, Fade, Button, TextField } from '@material-ui/core'
+import { Modal, Backdrop, Fade, Button } from '@material-ui/core'
 import { connect } from 'react-redux'
 
 import { styles } from './style'
-import { getBase, delItem, getMyBase } from '../../store/actions/dataBaseAction'
+import { getBase, delItem } from '../../store/actions/dataBaseAction'
+import CreateOrder from '../createOrder/createOrder'
 
 const useStyles = makeStyles(styles)
 
 const ItemOrder = props => {
-  console.log('ItemOrder', props)
-  const itemId = Object.keys(props.itemOrder).join('') || ''
-  const itemKey = props.itemOrder[Object.keys(props.itemOrder)] || {}
+  // console.log('ItemOrder', props)
   const classes = useStyles()
-  console.log('ItemOrder itemId', itemId)
-  console.log('ItemOrder itemKey', itemKey)
   const {
     getBase,
-    getMyBase,
     delItem,
+    itemOrder,
     state: {
-      // dataBase: { allUsers = {} },
       userInfo: { ownerId }
     },
   } = props
 
-  // const owner = allUsers[itemKey.ownerId] || ''
-  const isOwner = itemKey.ownerId === ownerId
+  const [isEdit, setIsEdit] = useState(false)
+  const isOwner = itemOrder.ownerId === ownerId
 
   return (
     <div>
@@ -34,37 +30,50 @@ const ItemOrder = props => {
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         className={classes.modal}
-        open={!!itemId}
-        onClose={props.clearItemOrder}
+        open={!!itemOrder.id}
+        onClose={
+          () => {
+            props.clearItemOrder()
+            setIsEdit(false)
+          }
+        }
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500,
         }}
       >
-        <Fade in={!!itemId}>
+        <Fade
+          in={!!itemOrder.id}
+        >
           <div className={classes.paper}>
             <h2 id="transition-modal-title">Выбранная запчасть</h2>
-            <div>
-              <div className={classes.itemString}>
-                Владелец: {itemKey.ownerName || ''}
-              </div>
-              <div className={classes.itemString}>brand: {itemKey.brand || ''}</div>
-              <div className={classes.itemString}>Model :{itemKey.model || ''}</div>
-              <div className={classes.itemString}>Part: {itemKey.part || ''}</div>
-              <div className={classes.itemString}>
-                Description: {itemKey.description || ''}
-              </div>
-              <div
-                className={classes.itemString}
-              >
-                Телефон хозяина :{itemKey.ownerPhone}
-              </div>
-              <div
-                className={classes.itemString}
-              >
-                Дата создания :{itemKey.date}
-              </div>
+            <div className={classes.editer}>
+              {
+                isEdit ?
+                  <CreateOrder clearItemOrder={props.clearItemOrder} item={itemOrder} itemId={itemOrder.id} /> :
+                  <div>
+                    <div className={classes.itemString}>
+                      Владелец: {itemOrder.ownerName || ''}
+                    </div>
+                    <div className={classes.itemString}>brand: {itemOrder.brand || ''} </div>
+                    <div className={classes.itemString}>Model :{itemOrder.model || ''}</div>
+                    <div className={classes.itemString}>Part: {itemOrder.part || ''}</div>
+                    <div className={classes.itemString}>
+                      Description: {itemOrder.description || ''}
+                    </div>
+                    <div
+                      className={classes.itemString}
+                    >
+                      Телефон хозяина :{itemOrder.ownerPhone}
+                    </div>
+                    <div
+                      className={classes.itemString}
+                    >
+                      Дата создания :{itemOrder.date}
+                    </div>
+                  </div>
+              }
               {isOwner ?
                 <>
                   <Button
@@ -73,30 +82,36 @@ const ItemOrder = props => {
                     color="primary"
                     onClick={() => {
                       props.clearItemOrder()
-                      // props.delItemOrder()
-                      delItem(itemId)
+                      delItem(itemOrder.id)
                       getBase()
-                      getMyBase(ownerId)
-                      // firebase.database().ref('orders/' + itemId).remove()
                     }}
                   >
                     Удалить запчасть(вы хозяин)
               </Button>
-                  <Button
-                    variant="outlined"
-                    className={classes.buttonDel}
-                    color="primary"
-                    onClick={() => {
-                      // props.clearItemOrder()
-                      // props.delItemOrder()
-                      // delItem(itemId)
-                      // getBase()
-                      // getMyBase(ownerId)
-                      // firebase.database().ref('orders/' + itemId).remove()
-                    }}
-                  >
-                    Редактировать запчасть
-              </Button>
+                  {
+                    isEdit ?
+                      <Button
+                        variant="outlined"
+                        className={classes.buttonDel}
+                        color="primary"
+                        onClick={() => {
+                          setIsEdit(false)
+                        }}
+                      >
+                        Отменить редактирование
+                  </Button>
+                      :
+                      <Button
+                        variant="outlined"
+                        className={classes.buttonDel}
+                        color="primary"
+                        onClick={() => {
+                          setIsEdit(true)
+                        }}
+                      >
+                        Редактировать запчасть
+                      </Button>
+                  }
                 </>
                 : null
               }
@@ -118,7 +133,6 @@ const mapDispatchToProps = dispatch => {
   return {
     getBase: () => dispatch(getBase()),
     delItem: (id) => dispatch(delItem(id)),
-    getMyBase: (id) => dispatch(getMyBase(id))
   }
 }
 

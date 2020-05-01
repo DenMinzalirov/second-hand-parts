@@ -29,73 +29,6 @@ export const delItem = (itemId) => {
   }
 }
 
-// export const getAllUsers = () => {
-//   return dispatch => {
-//     dispatch({
-//       type: GET_ALL_USERS_REQUEST,
-//     })
-//     firebase
-//       .database()
-//       .ref('users')
-//       .once('value')
-//       .then(snapshot => {
-//         dispatch({
-//           type: GET_ALL_USERS_SUCCESS,
-//           payload: snapshot.val(),
-//         })
-//       })
-//   }
-// }
-
-// export const getUserOwner = ownerId => {
-//   return dispatch => {
-//     dispatch({
-//       type: GET_USER_OWNER_REQUEST,
-//     })
-//     firebase
-//       .database()
-//       .ref('users')
-//       .child(ownerId)
-//       .once('value')
-//       .then(snapshot => {
-//         dispatch({
-//           type: GET_USER_OWNER_SUCCESS,
-//           payload: snapshot.val().phone,
-//         })
-//         console.log(snapshot.val().phone)
-//       })
-//   }
-// }
-
-export const getMyBase = (ownerId) => {
-  return dispatch => {
-    dispatch({
-      type: GET_MY_BASE_REQUEST,
-    })
-    firebase
-      .database()
-      .ref('orders')
-      .once('value')
-      .then(snapshot => {
-        dispatch({
-          type: GET_MY_BASE_SUCCESS,
-          payload: Object.entries(snapshot.val()).map(entry => ({
-            [entry[0]]: entry[1],
-          })).filter((item) => {
-            return item[Object.keys(item)[0]].ownerId === ownerId
-          }),
-        })
-      })
-      .catch(e => {
-        console.log('GET_MY_BASE_UNSUCCESS', e)
-        dispatch({
-          type: GET_MY_BASE_UNSUCCESS,
-          payload: e,
-        })
-      })
-  }
-}
-
 export const clearBase = () => {
   return dispatch => {
     dispatch({
@@ -116,9 +49,10 @@ export const getBase = () => {
       .then(snapshot => {
         dispatch({
           type: GET_BASE_SUCCESS,
-          payload: Object.entries(snapshot.val()).map(entry => ({
-            [entry[0]]: entry[1],
-          })),
+          payload: Object.entries(snapshot.val()).map((ent) => {
+            ent[1].id = ent[0]
+            return ent[1]
+          }).reverse(),
         })
       })
       .catch(e => {
