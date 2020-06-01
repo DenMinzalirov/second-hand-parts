@@ -3,4 +3,5 @@
 ### Ссылка на рабочее приложение
 Working link https://denminzalirov.github.io/SHdepl
 ### Технологии: 
-React 16, Firebase, Material
+React 16, Redux, Firebase, Material  
+Доступ: (Login: test@test.com Password: 123456)
